@@ -33,31 +33,31 @@ const WebhookTable = ({ webhooks, accessToken, onWebhooksChange, className = "" 
   };
 
   return (
-    <div className={`overflow-hidden rounded-lg border border-gray-200 ${className}`}>
+    <div className={`overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 ${className}`}>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead>
-            <tr className="bg-gray-50">
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resource Name</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Post URL</th>
+            <tr className="bg-gray-50 dark:bg-gray-800">
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Resource Name</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Post URL</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white dark:bg-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
             {webhooks.map((webhook) => (
-              <tr key={webhook.id} className="hover:bg-gray-50 transition-colors">
+              <tr key={webhook.id} className="hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <button
                     onClick={() => handleDelete(webhook.id)}
-                    className="text-sm text-red-600 hover:text-red-900 font-medium transition-colors"
+                    className="text-sm text-red-600 hover:text-red-900 dark:text-red-500 dark:hover:text-red-400 font-medium transition-colors"
                   >
                     Delete
                   </button>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{webhook.id}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{webhook.resource_name}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 truncate max-w-md">{webhook.post_url}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{webhook.id}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{webhook.resource_name}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300 truncate max-w-md">{webhook.post_url}</td>
               </tr>
             ))}
           </tbody>

@@ -37,13 +37,24 @@ export default function GumroadApiUI() {
     setResult('')
     try {
       const response = await fetch(`https://api.gumroad.com/v2/resource_subscriptions?access_token=${accessToken}&resource_name=${resourceType}`)
+      if (!response.ok) {
+        const errorText = await response.text()
+        let errorMessage = `HTTP Error ${response.status}`
+        try {
+          const errorJson = JSON.parse(errorText)
+          errorMessage = ` ${errorJson.message || errorJson.error || errorText}`
+        } catch {
+          errorMessage = ` ${errorText || 'Invalid token or unauthorized access'}`
+        }
+        throw new Error(errorMessage)
+      }
       const data = await response.json()
       setResult(JSON.stringify(data, null, 2))
       if (data.success && data.resource_subscriptions) {
         setWebhooks(data.resource_subscriptions)
       }
     } catch (error) {
-      setResult(`Error: ${error.message}`)
+      setResult(` ${error.message}`)
     } finally {
       setIsLoading(false)
     }
@@ -64,10 +75,21 @@ export default function GumroadApiUI() {
           post_url: postUrl,
         }),
       })
+      if (!response.ok) {
+        const errorText = await response.text()
+        let errorMessage = `HTTP Error ${response.status}`
+        try {
+          const errorJson = JSON.parse(errorText)
+          errorMessage = `${errorJson.message || errorJson.error || errorText}`
+        } catch {
+          errorMessage = `${errorText || 'Invalid token or unauthorized access'}`
+        }
+        throw new Error(errorMessage)
+      }
       const data = await response.json()
       setResult(JSON.stringify(data, null, 2))
     } catch (error) {
-      setResult(`Error: ${error.message}`)
+      setResult(` ${error.message}`)
     } finally {
       setIsLoading(false)
     }
