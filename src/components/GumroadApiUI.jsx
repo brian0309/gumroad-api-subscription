@@ -74,48 +74,46 @@ export default function GumroadApiUI() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8 transition-colors duration-200">
+    <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 py-4 sm:py-8 transition-colors duration-200">
       <Toaster position="top-right" />
-      <Card className="p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <div className="space-y-6">
+      <Card className="p-4 sm:p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
+        <div className="space-y-4 sm:space-y-6">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Gumroad API Request</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Gumroad API Request</h2>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
               Execute GET or PUT requests to Gumroad's resource subscriptions endpoint
             </p>
           </div>
 
-          <Tabs 
-            tabs={tabs} 
-            activeTab={activeTab} 
-            onTabChange={setActiveTab}
-          />
+          <div className="space-y-4">
+            <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
 
-          <div className="space-y-6">
             {activeTab === 'get' ? (
               <>
-                <div className="grid gap-4 sm:flex sm:gap-3">
+                <div className="space-y-4">
                   <Input
                     placeholder="Enter your access token"
                     value={accessToken}
                     onChange={(e) => setAccessToken(e.target.value)}
-                    className="flex-1 dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                    className="w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
                   />
-                  <Select
-                    value={resourceType}
-                    onChange={(e) => setResourceType(e.target.value)}
-                    options={resourceTypes}
-                    className="sm:w-40 dark:bg-gray-700 dark:text-white dark:border-gray-600"
-                  />
-                  <Button
-                    onClick={handleGetRequest}
-                    disabled={isLoading || !accessToken}
-                    className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
-                  >
-                    {isLoading ? 'Loading...' : 'Get Subscriptions'}
-                  </Button>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Select
+                      value={resourceType}
+                      onChange={(e) => setResourceType(e.target.value)}
+                      options={resourceTypes}
+                      className="w-full sm:w-40 dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                    />
+                    <Button
+                      onClick={handleGetRequest}
+                      disabled={isLoading || !accessToken}
+                      className="w-full sm:flex-1 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                    >
+                      {isLoading ? 'Loading...' : 'Get Subscriptions'}
+                    </Button>
+                  </div>
                 </div>
-                {webhooks.length > 0 && (
+                {webhooks && (
                   <WebhookTable 
                     webhooks={webhooks} 
                     accessToken={accessToken}
@@ -130,20 +128,20 @@ export default function GumroadApiUI() {
                   placeholder="Enter your access token"
                   value={accessToken}
                   onChange={(e) => setAccessToken(e.target.value)}
-                  className="dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                  className="w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
                 />
-                <div className="grid gap-4 sm:flex sm:gap-3">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <Select
                     value={resourceType}
                     onChange={(e) => setResourceType(e.target.value)}
                     options={resourceTypes}
-                    className="sm:w-40 dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                    className="w-full sm:w-40 dark:bg-gray-700 dark:text-white dark:border-gray-600"
                   />
                   <Input
                     placeholder="Enter post URL"
                     value={postUrl}
                     onChange={(e) => setPostUrl(e.target.value)}
-                    className="flex-1 dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                    className="w-full sm:flex-1 dark:bg-gray-700 dark:text-white dark:border-gray-600"
                   />
                 </div>
                 <div>
@@ -160,8 +158,8 @@ export default function GumroadApiUI() {
           </div>
 
           {result && (
-            <div>
-              <p className="text-gray-900 dark:text-white">Plain text Result:</p>
+            <div className="space-y-2">
+              <p className="text-gray-900 dark:text-white font-medium">Result:</p>
               <ResultBox content={result} className="dark:bg-gray-800 dark:text-white" />
             </div>
           )}
