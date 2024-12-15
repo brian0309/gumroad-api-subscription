@@ -110,6 +110,9 @@ export default function GumroadApiUI() {
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
               What's the point? To easily manage your Gumroad subscription webhooks!
               </p>
+              <p className="mt-1 mb-8 text-sm text-gray-500 dark:text-gray-400">
+              No login required. No tokens is saved.
+              </p>
             </div>
 
             <div className="space-y-4">
@@ -191,7 +194,9 @@ export default function GumroadApiUI() {
               </div>
             )}
           </div>
-          <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">Buy me a coffee: <a href="https://brianfx.gumroad.com/coffee" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">https://brianfx.gumroad.com/coffee</a></p>
+          <p className="mt-12 text-sm text-gray-500 dark:text-gray-400">View Source Code: <a href="https://github.com/brian0309/gumroad-api-subscription/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">https://github.com/brian0309/gumroad-api-subscription/</a></p>
+          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">Gumroad Resource Subscriptions API: <a href="https://app.gumroad.com/api#resource-subscriptions" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">https://app.gumroad.com/api#resource-subscriptions</a></p>   
+          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">Buy me a coffee: <a href="https://brianfx.gumroad.com/coffee" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">https://brianfx.gumroad.com/coffee</a></p>
         </Card>
       </div>
     </div>
