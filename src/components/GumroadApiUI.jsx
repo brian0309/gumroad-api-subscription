@@ -5,6 +5,7 @@ import Select from './ui/Select'
 import ResultBox from './ui/ResultBox'
 import Tabs from './ui/Tabs'
 import WebhookTable from './WebhookTable'
+import Card from './ui/Card'
 
 const tabs = [
   { value: 'get', label: 'GET Request' },
@@ -72,13 +73,15 @@ export default function GumroadApiUI() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-        <div className="p-6">
-          <h2 className="text-xl font-semibold mb-1">Gumroad API Request</h2>
-          <p className="text-gray-600 text-sm mb-6">
-            Execute GET or PUT requests to Gumroad's resource subscriptions endpoint
-          </p>
+    <div className="max-w-3xl mx-auto px-4 py-8">
+      <Card>
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-semibold text-gray-900">Gumroad API Request</h2>
+            <p className="mt-1 text-sm text-gray-500">
+              Execute GET or PUT requests to Gumroad's resource subscriptions endpoint
+            </p>
+          </div>
 
           <Tabs 
             tabs={tabs} 
@@ -86,10 +89,10 @@ export default function GumroadApiUI() {
             onTabChange={setActiveTab}
           />
 
-          <div className="mt-6">
+          <div className="space-y-6">
             {activeTab === 'get' ? (
               <>
-                <div className="flex gap-3 mb-6">
+                <div className="grid gap-4 sm:flex sm:gap-3">
                   <Input
                     placeholder="Enter your access token"
                     value={accessToken}
@@ -100,7 +103,7 @@ export default function GumroadApiUI() {
                     value={resourceType}
                     onChange={(e) => setResourceType(e.target.value)}
                     options={resourceTypes}
-                    className="w-32"
+                    className="sm:w-40"
                   />
                   <Button
                     onClick={handleGetRequest}
@@ -110,24 +113,22 @@ export default function GumroadApiUI() {
                   </Button>
                 </div>
                 {webhooks.length > 0 && (
-                  <div className="mb-6">
-                    <WebhookTable webhooks={webhooks} />
-                  </div>
+                  <WebhookTable webhooks={webhooks} />
                 )}
               </>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <Input
                   placeholder="Enter your access token"
                   value={accessToken}
                   onChange={(e) => setAccessToken(e.target.value)}
                 />
-                <div className="flex gap-3">
+                <div className="grid gap-4 sm:flex sm:gap-3">
                   <Select
                     value={resourceType}
                     onChange={(e) => setResourceType(e.target.value)}
                     options={resourceTypes}
-                    className="w-32"
+                    className="sm:w-40"
                   />
                   <Input
                     placeholder="Enter post URL"
@@ -149,12 +150,13 @@ export default function GumroadApiUI() {
           </div>
 
           {result && (
-            <div className="mt-6">
+            <div>
+              <p>Plain text Result:</p>
               <ResultBox content={result} />
             </div>
           )}
         </div>
-      </div>
+      </Card>
     </div>
   )
 }

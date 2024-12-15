@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import GumroadApiUI from './components/GumroadApiUI'
-import './App.css'
 
 function App() {
   return (
