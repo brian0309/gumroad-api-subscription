@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Toaster } from 'react-hot-toast'
 import Button from './ui/Button'
 import Input from './ui/Input'
 import Select from './ui/Select'
@@ -73,12 +74,13 @@ export default function GumroadApiUI() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      <Card>
+    <div className="max-w-3xl mx-auto px-4 py-8 transition-colors duration-200">
+      <Toaster position="top-right" />
+      <Card className="p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
         <div className="space-y-6">
           <div>
-            <h2 className="text-2xl font-semibold text-gray-900">Gumroad API Request</h2>
-            <p className="mt-1 text-sm text-gray-500">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Gumroad API Request</h2>
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
               Execute GET or PUT requests to Gumroad's resource subscriptions endpoint
             </p>
           </div>
@@ -97,23 +99,29 @@ export default function GumroadApiUI() {
                     placeholder="Enter your access token"
                     value={accessToken}
                     onChange={(e) => setAccessToken(e.target.value)}
-                    className="flex-1"
+                    className="flex-1 dark:bg-gray-700 dark:text-white dark:border-gray-600"
                   />
                   <Select
                     value={resourceType}
                     onChange={(e) => setResourceType(e.target.value)}
                     options={resourceTypes}
-                    className="sm:w-40"
+                    className="sm:w-40 dark:bg-gray-700 dark:text-white dark:border-gray-600"
                   />
                   <Button
                     onClick={handleGetRequest}
                     disabled={isLoading || !accessToken}
+                    className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
                   >
-                    {isLoading ? 'Loading...' : 'Get Webhooks'}
+                    {isLoading ? 'Loading...' : 'Get Subscriptions'}
                   </Button>
                 </div>
                 {webhooks.length > 0 && (
-                  <WebhookTable webhooks={webhooks} />
+                  <WebhookTable 
+                    webhooks={webhooks} 
+                    accessToken={accessToken}
+                    onWebhooksChange={setWebhooks}
+                    className="dark:bg-gray-800"
+                  />
                 )}
               </>
             ) : (
@@ -122,25 +130,27 @@ export default function GumroadApiUI() {
                   placeholder="Enter your access token"
                   value={accessToken}
                   onChange={(e) => setAccessToken(e.target.value)}
+                  className="dark:bg-gray-700 dark:text-white dark:border-gray-600"
                 />
                 <div className="grid gap-4 sm:flex sm:gap-3">
                   <Select
                     value={resourceType}
                     onChange={(e) => setResourceType(e.target.value)}
                     options={resourceTypes}
-                    className="sm:w-40"
+                    className="sm:w-40 dark:bg-gray-700 dark:text-white dark:border-gray-600"
                   />
                   <Input
                     placeholder="Enter post URL"
                     value={postUrl}
                     onChange={(e) => setPostUrl(e.target.value)}
-                    className="flex-1"
+                    className="flex-1 dark:bg-gray-700 dark:text-white dark:border-gray-600"
                   />
                 </div>
                 <div>
                   <Button
                     onClick={handlePutRequest}
                     disabled={isLoading || !accessToken || !postUrl}
+                    className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
                   >
                     {isLoading ? 'Executing...' : 'Execute PUT'}
                   </Button>
@@ -151,8 +161,8 @@ export default function GumroadApiUI() {
 
           {result && (
             <div>
-              <p>Plain text Result:</p>
-              <ResultBox content={result} />
+              <p className="text-gray-900 dark:text-white">Plain text Result:</p>
+              <ResultBox content={result} className="dark:bg-gray-800 dark:text-white" />
             </div>
           )}
         </div>
