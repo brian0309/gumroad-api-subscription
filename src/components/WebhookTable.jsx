@@ -47,7 +47,7 @@ const WebhookTable = ({ webhooks, accessToken, onWebhooksChange, className = "" 
           <tbody className="bg-white dark:bg-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
             {webhooks.map((webhook) => (
               <tr key={webhook.id} className="hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-6 py-4">
                   <button
                     onClick={() => handleDelete(webhook.id)}
                     className="text-sm text-red-600 hover:text-red-900 dark:text-red-500 dark:hover:text-red-400 font-medium transition-colors"
@@ -55,9 +55,9 @@ const WebhookTable = ({ webhooks, accessToken, onWebhooksChange, className = "" 
                     Delete
                   </button>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{webhook.id}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{webhook.resource_name}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300 truncate max-w-md">{webhook.post_url}</td>
+                <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">{webhook.id}</td>
+                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{webhook.resource_name}</td>
+                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300 break-words">{webhook.post_url}</td>
               </tr>
             ))}
           </tbody>

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 import Button from './ui/Button'
 import Input from './ui/Input'
 import Select from './ui/Select'
@@ -7,6 +7,7 @@ import ResultBox from './ui/ResultBox'
 import Tabs from './ui/Tabs'
 import WebhookTable from './WebhookTable'
 import Card from './ui/Card'
+import Toast from './ui/Toast'
 
 const tabs = [
   { value: 'get', label: 'GET Request' },
@@ -96,22 +97,59 @@ export default function GumroadApiUI() {
   }
 
   return (
-    <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 py-4 sm:py-8 transition-colors duration-200">
-      <Toaster position="top-right" />
-      <Card className="p-4 sm:p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <div className="space-y-4 sm:space-y-6">
-          <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Gumroad API Request</h2>
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              Execute GET or PUT requests to Gumroad's resource subscriptions endpoint
-            </p>
-          </div>
+    <div className="space-y-4">
+      <Toast />
+      <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 py-4 sm:py-8 transition-colors duration-200">
+        <Card className="p-4 sm:p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
+          <div className="space-y-4 sm:space-y-6">
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4">Gumroad Subscription API</h1>
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                Execute GET, PUT, DELETE requests to Gumroad's resource subscriptions endpoint.
+              </p>
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              What's the point? To easily manage your Gumroad subscription webhooks!
+              </p>
+            </div>
 
-          <div className="space-y-4">
-            <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
+            <div className="space-y-4">
+              <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
 
-            {activeTab === 'get' ? (
-              <>
+              {activeTab === 'get' ? (
+                <>
+                  <div className="space-y-4">
+                    <Input
+                      placeholder="Enter your access token"
+                      value={accessToken}
+                      onChange={(e) => setAccessToken(e.target.value)}
+                      className="w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                    />
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <Select
+                        value={resourceType}
+                        onChange={(e) => setResourceType(e.target.value)}
+                        options={resourceTypes}
+                        className="w-full sm:w-40 dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                      />
+                      <Button
+                        onClick={handleGetRequest}
+                        disabled={isLoading || !accessToken}
+                        className="w-full sm:flex-1 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                      >
+                        {isLoading ? 'Loading...' : 'Get Subscriptions'}
+                      </Button>
+                    </div>
+                  </div>
+                  {webhooks && (
+                    <WebhookTable 
+                      webhooks={webhooks} 
+                      accessToken={accessToken}
+                      onWebhooksChange={setWebhooks}
+                      className="dark:bg-gray-800"
+                    />
+                  )}
+                </>
+              ) : (
                 <div className="space-y-4">
                   <Input
                     placeholder="Enter your access token"
@@ -126,67 +164,36 @@ export default function GumroadApiUI() {
                       options={resourceTypes}
                       className="w-full sm:w-40 dark:bg-gray-700 dark:text-white dark:border-gray-600"
                     />
+                    <Input
+                      placeholder="Enter post URL"
+                      value={postUrl}
+                      onChange={(e) => setPostUrl(e.target.value)}
+                      className="w-full sm:flex-1 dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                    />
+                  </div>
+                  <div>
                     <Button
-                      onClick={handleGetRequest}
-                      disabled={isLoading || !accessToken}
-                      className="w-full sm:flex-1 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                      onClick={handlePutRequest}
+                      disabled={isLoading || !accessToken || !postUrl}
+                      className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
                     >
-                      {isLoading ? 'Loading...' : 'Get Subscriptions'}
+                      {isLoading ? 'Executing...' : 'Execute PUT'}
                     </Button>
                   </div>
                 </div>
-                {webhooks && (
-                  <WebhookTable 
-                    webhooks={webhooks} 
-                    accessToken={accessToken}
-                    onWebhooksChange={setWebhooks}
-                    className="dark:bg-gray-800"
-                  />
-                )}
-              </>
-            ) : (
-              <div className="space-y-4">
-                <Input
-                  placeholder="Enter your access token"
-                  value={accessToken}
-                  onChange={(e) => setAccessToken(e.target.value)}
-                  className="w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
-                />
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Select
-                    value={resourceType}
-                    onChange={(e) => setResourceType(e.target.value)}
-                    options={resourceTypes}
-                    className="w-full sm:w-40 dark:bg-gray-700 dark:text-white dark:border-gray-600"
-                  />
-                  <Input
-                    placeholder="Enter post URL"
-                    value={postUrl}
-                    onChange={(e) => setPostUrl(e.target.value)}
-                    className="w-full sm:flex-1 dark:bg-gray-700 dark:text-white dark:border-gray-600"
-                  />
-                </div>
-                <div>
-                  <Button
-                    onClick={handlePutRequest}
-                    disabled={isLoading || !accessToken || !postUrl}
-                    className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
-                  >
-                    {isLoading ? 'Executing...' : 'Execute PUT'}
-                  </Button>
-                </div>
+              )}
+            </div>
+
+            {result && (
+              <div className="space-y-2">
+                <p className="text-gray-900 dark:text-white font-medium">Result:</p>
+                <ResultBox content={result} className="dark:bg-gray-800 dark:text-white" />
               </div>
             )}
           </div>
-
-          {result && (
-            <div className="space-y-2">
-              <p className="text-gray-900 dark:text-white font-medium">Result:</p>
-              <ResultBox content={result} className="dark:bg-gray-800 dark:text-white" />
-            </div>
-          )}
-        </div>
-      </Card>
+          <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">Buy me a coffee: <a href="https://brianfx.gumroad.com/coffee" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">https://brianfx.gumroad.com/coffee</a></p>
+        </Card>
+      </div>
     </div>
   )
 }
