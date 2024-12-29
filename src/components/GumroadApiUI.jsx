@@ -22,6 +22,7 @@ const resourceTypes = [
   { value: 'cancellation', label: 'cancellation' },
   { value: 'subscription_updated', label: 'subscription_updated' },
   { value: 'subscription_ended', label: 'subscription_ended' },
+  { value: 'all', label: 'All' },
 ]
 
 export default function GumroadApiUI() {
@@ -36,23 +37,49 @@ export default function GumroadApiUI() {
   const handleGetRequest = async () => {
     setIsLoading(true)
     setResult('')
+    let allWebhooks = [];
     try {
-      const response = await fetch(`https://api.gumroad.com/v2/resource_subscriptions?access_token=${accessToken}&resource_name=${resourceType}`)
-      if (!response.ok) {
-        const errorText = await response.text()
-        let errorMessage = `HTTP Error ${response.status}`
-        try {
-          const errorJson = JSON.parse(errorText)
-          errorMessage = ` ${errorJson.message || errorJson.error || errorText}`
-        } catch {
-          errorMessage = ` ${errorText || 'Invalid token or unauthorized access'}`
+      if (resourceType === 'all') {
+        for (const type of resourceTypes) {
+          if (type.value !== 'all') {
+            const response = await fetch(`https://api.gumroad.com/v2/resource_subscriptions?access_token=${accessToken}&resource_name=${type.value}`);
+            if (!response.ok) {
+              const errorText = await response.text();
+              let errorMessage = `HTTP Error ${response.status}`;
+              try {
+                const errorJson = JSON.parse(errorText);
+                errorMessage = ` ${errorJson.message || errorJson.error || errorText}`;
+              } catch {
+                errorMessage = ` ${errorText || 'Invalid token or unauthorized access'}`;
+              }
+              throw new Error(errorMessage);
+            }
+            const data = await response.json();
+            if (data.success && data.resource_subscriptions) {
+              allWebhooks = allWebhooks.concat(data.resource_subscriptions);
+            }
+          }
         }
-        throw new Error(errorMessage)
-      }
-      const data = await response.json()
-      setResult(JSON.stringify(data, null, 2))
-      if (data.success && data.resource_subscriptions) {
-        setWebhooks(data.resource_subscriptions)
+        setWebhooks(allWebhooks);
+        setResult(JSON.stringify(allWebhooks, null, 2));
+      } else {
+        const response = await fetch(`https://api.gumroad.com/v2/resource_subscriptions?access_token=${accessToken}&resource_name=${resourceType}`)
+        if (!response.ok) {
+          const errorText = await response.text()
+          let errorMessage = `HTTP Error ${response.status}`
+          try {
+            const errorJson = JSON.parse(errorText)
+            errorMessage = ` ${errorJson.message || errorJson.error || errorText}`
+          } catch {
+            errorMessage = ` ${errorText || 'Invalid token or unauthorized access'}`
+          }
+          throw new Error(errorMessage)
+        }
+        const data = await response.json()
+        setResult(JSON.stringify(data, null, 2))
+        if (data.success && data.resource_subscriptions) {
+          setWebhooks(data.resource_subscriptions)
+        }
       }
     } catch (error) {
       setResult(` ${error.message}`)
@@ -62,44 +89,77 @@ export default function GumroadApiUI() {
   }
 
   const handlePutRequest = async () => {
-    setIsLoading(true)
-    setResult('')
+    setIsLoading(true);
+    setResult('');
     try {
-      const response = await fetch('https://api.gumroad.com/v2/resource_subscriptions', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          access_token: accessToken,
-          resource_name: resourceType,
-          post_url: postUrl,
-        }),
-      })
-      if (!response.ok) {
-        const errorText = await response.text()
-        let errorMessage = `HTTP Error ${response.status}`
-        try {
-          const errorJson = JSON.parse(errorText)
-          errorMessage = `${errorJson.message || errorJson.error || errorText}`
-        } catch {
-          errorMessage = `${errorText || 'Invalid token or unauthorized access'}`
+      if (resourceType === 'all') {
+        let allResults = [];
+        for (const type of resourceTypes) {
+          if (type.value !== 'all') {
+            const response = await fetch('https://api.gumroad.com/v2/resource_subscriptions', {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                access_token: accessToken,
+                resource_name: type.value,
+                post_url: postUrl,
+              }),
+            });
+            if (!response.ok) {
+              const errorText = await response.text();
+              let errorMessage = `HTTP Error ${response.status}`;
+              try {
+                const errorJson = JSON.parse(errorText);
+                errorMessage = `${errorJson.message || errorJson.error || errorText}`;
+              } catch {
+                errorMessage = `${errorText || 'Invalid token or unauthorized access'}`;
+              }
+              throw new Error(errorMessage);
+            }
+            const data = await response.json();
+            allResults.push(data);
+          }
         }
-        throw new Error(errorMessage)
+        setResult(JSON.stringify(allResults, null, 2));
+      } else {
+        const response = await fetch('https://api.gumroad.com/v2/resource_subscriptions', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            access_token: accessToken,
+            resource_name: resourceType,
+            post_url: postUrl,
+          }),
+        });
+        if (!response.ok) {
+          const errorText = await response.text();
+          let errorMessage = `HTTP Error ${response.status}`;
+          try {
+            const errorJson = JSON.parse(errorText);
+            errorMessage = `${errorJson.message || errorJson.error || errorText}`;
+          } catch {
+            errorMessage = `${errorText || 'Invalid token or unauthorized access'}`;
+          }
+          throw new Error(errorMessage);
+        }
+        const data = await response.json();
+        setResult(JSON.stringify(data, null, 2));
       }
-      const data = await response.json()
-      setResult(JSON.stringify(data, null, 2))
     } catch (error) {
-      setResult(` ${error.message}`)
+      setResult(` ${error.message}`);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="space-y-4">
       <Toast />
-      <div className="w-full max-w-xl mx-auto px-3 sm:px-1 py-4 sm:py-8 transition-colors duration-200">
+      <div className="w-full max-w-4xl mx-auto px-3 sm:px-1 py-4 sm:py-8 transition-colors duration-200">
         <Card className="p-3 sm:p-3 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
           <div className="space-y-4 sm:space-y-6">
             <div>
@@ -189,7 +249,7 @@ export default function GumroadApiUI() {
 
             {result && (
               <div className="space-y-2">
-                <p className="text-gray-900 dark:text-white font-medium">Result:</p>
+                <p className="text-gray-900 dark:text-white font-medium">JSON Response:</p>
                 <ResultBox content={result} className="dark:bg-gray-800 dark:text-white" />
               </div>
             )}
