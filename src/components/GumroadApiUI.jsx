@@ -99,8 +99,8 @@ export default function GumroadApiUI() {
   return (
     <div className="space-y-4">
       <Toast />
-      <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 py-4 sm:py-8 transition-colors duration-200">
-        <Card className="p-4 sm:p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
+      <div className="w-full max-w-xl mx-auto px-3 sm:px-1 py-4 sm:py-8 transition-colors duration-200">
+        <Card className="p-3 sm:p-3 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
           <div className="space-y-4 sm:space-y-6">
             <div>
               <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4">Gumroad Subscription API</h1>
